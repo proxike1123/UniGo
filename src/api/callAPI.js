@@ -14,7 +14,7 @@ const callApi = async (params) => {
 
     var raw = JSON.stringify(params.param);
 
-    if (params.method == "POST") {
+    if (params.method == "POST" || params.method == "PUT") {
         var requestOptions = {
             method: params.method,
             headers: myHeaders,
@@ -29,6 +29,8 @@ const callApi = async (params) => {
 
 
     let mergeURL = url + params.command;
+
+    console.log("params",params)
 
     if (params.username) {
         mergeURL += "/" + params.username

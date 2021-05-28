@@ -36,7 +36,7 @@ class NotificationScreen extends Component {
         return (
             <View style = {styles.container}>
                 <Header
-                    title = {"Thông báo lớp học phần"}
+                    title = {"Thông tin lớp học phần"}
                     left = {<BackButton onPress = {this.goBack}/>}
                 />
                 <ScrollView 

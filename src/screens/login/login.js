@@ -7,7 +7,7 @@ import Loginbutton from './button-login';
 import {appColor} from '../../constants/app.constant';
 import {LoginModal} from '../../components/modals';
 import callApi from '../../api/callAPI';
-import {setSession, getSession, setUsername} from '../../store/store';
+import {setSession, getSession, setUsername, getUsername, setRole, getRole} from '../../store/store';
 import { connect } from 'react-redux';
 import {addProfile} from '../../redux/action'
 import { bindActionCreators } from 'redux';
@@ -34,7 +34,7 @@ class LoginScreen extends Component {
         this.setState({error: ""})
         const {MSSV, MSSVError, password, passwordError} = this.state;
         if (MSSV == "") {
-            this.setState({MSSVError: 'Vui lòng nhập MSSV'})
+            this.setState({MSSVError: 'Vui lòng tên tài khoản'})
         } else if (password == "") {
         this.setState({passwordError: "Vui lòng nhập mật khẩu"})
         } else {
@@ -49,16 +49,14 @@ class LoginScreen extends Component {
             }
             const res = await callApi(params);
             
-            if (res.status == "Ok") {
+            if (res.status == "Ok" && res.role == "user") {
                 await setSession(res.accessToken);
+                await setRole(res.role);
                 await setUsername(this.state.MSSV);
                 const params = {
                     command:"personal_informations",
                     username: this.state.MSSV,
                     method: "GET",
-                    param: {
-                        
-                    }
                 }
                 const result = await callApi(params);
 
@@ -70,8 +68,27 @@ class LoginScreen extends Component {
                     routes:[{name:'Main'}]
                 })
 
+            } else if (res.status == "Ok" && res.role == "admin") {
+                await setSession(res.accessToken);
+                await setUsername(this.state.MSSV);
+                await setRole(res.role);
+                this.setState({loadingModalVisible: false})
+                this.props.navigation.dispatch(StackActions.replace('Admin'));
+                this.props.navigation.reset({
+                    index:0,
+                    routes:[{name:'Admin'}]
+                })
+
             } else {
-                this.setState({loadingModalVisible: false, error: "Server đang bị lỗi, vui lòng thử lại sau"})
+                let error = "Server đang bị lỗi, vui lòng thử lại sau";
+                console.log("hể", res.status == "Oke" && res.block == true)
+                if (res.status == "Ok" && res.block == true) {
+                    error = "Tài khoản của bạn đã bị khóa"
+                } else if (res.status == "Invalid" ) {
+                    error = "Bạn đã nhập sai tài khoản hoặc mật khẩu"
+                }
+
+                this.setState({loadingModalVisible: false, error: error})
             }
         }
     }
@@ -97,19 +114,33 @@ class LoginScreen extends Component {
         ]).start();
     }
 
-    componentDidMount () {
+    async componentDidMount () {
         this.checkAutoLogin();
+        const us = await getUsername();
+        if (us) {
+            this.setState({MSSV: us})
+        }
+        
     }
 
     checkAutoLogin = async () => {
         setTimeout(async () => {
             const sess = await getSession()
+            const role = await getRole()
             if (sess) {
-                this.props.navigation.dispatch(StackActions.replace('Main'));
-                this.props.navigation.reset({
-                    index:0,
-                    routes:[{name:'Main'}]
-                })
+                if (role == "user") {
+                    this.props.navigation.dispatch(StackActions.replace('Main'));
+                    this.props.navigation.reset({
+                        index:0,
+                        routes:[{name:'Main'}]
+                    })
+                } else {
+                    this.props.navigation.dispatch(StackActions.replace('Admin'));
+                    this.props.navigation.reset({
+                        index:0,
+                        routes:[{name:'Admin'}]
+                    })
+                }
             } else {
                 this.changeToLogin()
             }
@@ -160,7 +191,7 @@ class LoginScreen extends Component {
                             errorMessage={MSSVError}
                             value={MSSV}
                             icon={require('../../assets/images/ic_info.png')}
-                            placeholder={'Nhập mã số sinh viên'}
+                            placeholder={'Nhập tên tài khoản'}
                         />
                         <InputView
                             icon={require('../../assets/images/ic_password.png')}

@@ -37,7 +37,7 @@ export default class CommonInfo extends Component{
         return(
             <View style = {styles.container}>
                 <Header 
-                    title = {"Thông báo chung"}
+                    title = {"Thông tin chung"}
                     left = {<BackButton onPress = {this.goBack}/>}
                 />
                 <ScrollView 

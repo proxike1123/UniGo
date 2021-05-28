@@ -4,6 +4,16 @@ const SESSION = "@SESSION";
 
 const USERNAME = "@USERNAME";
 
+const ROLE = "@ROLE";
+
+const setRole = (role) => {
+    AsyncStore.setItem(ROLE, role);
+}
+
+const getRole = () => {
+    return AsyncStore.getItem(ROLE);
+}
+
 const setSession = (id) => {
     AsyncStore.setItem(SESSION, id);
 }
@@ -35,6 +45,8 @@ export {
     setUsername,
     getUsername,
     deleteUsername,
+    getRole,
+    setRole,
 }
 
 

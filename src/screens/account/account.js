@@ -11,7 +11,6 @@ import { connect } from 'react-redux';
 class AccountScreen extends Component {
     onLogout = async () => {
         await deleteSession();
-        await deleteUsername();
         this.props.navigation.dispatch(StackActions.replace('Auth'));
         this.props.navigation.reset({
             index:0,

@@ -44,7 +44,6 @@ export default class SummaryResult extends Component{
             username: username,
         }
         const res = await callApi(params);
-        console.log(res)
         this.setState({data: res, loading: false})
     }
 

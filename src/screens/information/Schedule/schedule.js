@@ -46,8 +46,7 @@ export default class Schedule extends Component{
             username: username,
         }
         const res = await callApi(params);
-        console.log(res)
-        this.setState({data: res, loading: false})
+        this.setState({data: res.length > 0 ? res : [], loading: false})
     }
 
     render () {

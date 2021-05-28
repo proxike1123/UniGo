@@ -16,6 +16,7 @@ import {deleteSession} from '../../store/store';
 import { connect } from 'react-redux';
 import {addProfile} from '../../redux/action'
 import { url } from '../../api/url';
+import callApi from '../../api/callAPI';
 
 const schedule = require('../../assets/images/schedule.png')
 const exam = require("../../assets/images/exam.png")
@@ -24,12 +25,14 @@ const common = require("../../assets/images/common.png")
 const box = require("../../assets/images/box.png")
 const classes = require("../../assets/images/classes.png")
 const result = require("../../assets/images/result.png")
+import Toast from 'react-native-simple-toast';
 
 class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-           
+           loading: false,
+           permission: []
         }
     }
     onLogout = async () => {
@@ -49,15 +52,33 @@ class HomeScreen extends Component {
     }
 
     navigateToSchedule = () => {
-        this.props.navigation.navigate("Schedule");
+        const {permission} = this.state;
+        let index = permission.indexOf("Lịch học");
+        if (index >= 0) {
+            this.props.navigation.navigate("Schedule");
+        } else {
+            Toast.show("Chức năng đang bị khóa", Toast.LONG)
+        }
     }
 
     navigateToExam = () => {
-        this.props.navigation.navigate("Exam");
+        const {permission} = this.state;
+        let index = permission.indexOf("Lịch thi");
+        if (index >= 0) {
+            this.props.navigation.navigate("Exam");
+        } else {
+            Toast.show("Chức năng đang bị khóa", Toast.LONG)
+        }
     }
 
     navigateToScore = () => {
-        this.props.navigation.navigate("Score");
+        const {permission} = this.state;
+        let index = permission.indexOf("Điểm");
+        if (index >= 0) {
+            this.props.navigation.navigate("Score");
+        } else {
+            Toast.show("Chức năng đang bị khóa", Toast.LONG)
+        }
     }
 
     navigateToClasses = () => {
@@ -65,7 +86,30 @@ class HomeScreen extends Component {
     }
 
     navigateToSummaryResult = () => {
-        this.props.navigation.navigate("Summary");
+        const {permission} = this.state;
+        let index = permission.indexOf("KQ HTRL");
+        if (index >= 0) {
+            this.props.navigation.navigate("Summary");
+        } else {
+            Toast.show("Chức năng đang bị khóa", Toast.LONG)
+        }
+    }
+
+    getPermisson = async () => {
+        const params = {
+            command:"permissions",
+            username: this.props.id,
+            method: "GET",
+        }
+        const res = await callApi(params);
+        console.log(res)
+        let permission = []
+        res[0].permissionsDTOSet.map(item => permission.push(item.permissionName))
+        this.setState({permission: permission})
+    }
+
+    componentDidMount () {
+        this.getPermisson()
     }
 
     render () {
@@ -113,15 +157,17 @@ class HomeScreen extends Component {
                         </View>
                         <View style = {styles.rowItem}>
                             <HomeItem 
-                                    icon = {schedule} 
-                                    title = "Xem lịch học"
-                                    onPress = {this.navigateToSchedule}
+                                icon = {schedule} 
+                                title = "Xem lịch học"
+                                onPress = {this.navigateToSchedule}
+                                block = {this.state.permission.indexOf("Lịch học") < 0}
                             />  
                             <View style = {styles.spacing}/>
                             <HomeItem 
                                 icon = {exam} 
                                 title = "Xem lịch thi"
                                 onPress = {this.navigateToExam}
+                                block = {this.state.permission.indexOf("Lịch thi") < 0}
                             />  
                         </View>
                         <View style = {styles.rowItem}>
@@ -129,12 +175,14 @@ class HomeScreen extends Component {
                                 icon = {score} 
                                 title = "Xem điểm"
                                 onPress = {this.navigateToScore}
+                                block = {this.state.permission.indexOf("Điểm") < 0}
                             />
                             <View style = {styles.spacing}/>
                             <HomeItem 
                                 icon = {result} 
                                 title = "Học tập, rèn luyện"
                                 onPress = {this.navigateToSummaryResult}
+                                block = {this.state.permission.indexOf("KQ HTRL") < 0}
                             />
                         </View>
                     </View>
@@ -190,7 +238,7 @@ const styles = StyleSheet.create({
     infoText2: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: sizeFont(18)
+        fontSize: sizeFont(16)
     },
     infoContain: {
         marginLeft: sizeWidth(30)
