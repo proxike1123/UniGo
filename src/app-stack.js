@@ -14,6 +14,7 @@ import {
 import NotificationScreen from './screens/notification/notification';
 import AdminScreen from './screens/admin/admin';
 import ScoreDetal from './screens/information/Score/ScoreDetail';
+import ResultDetail from './screens/information/SummaryResult/ResultDetail';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -38,6 +39,7 @@ class App extends Component {
           <RootStack.Screen name="Summary" component={SummaryResult} />
           <RootStack.Screen name="Admin" component={AdminScreen} />
           <RootStack.Screen name="ScoreDetail" component={ScoreDetal} />
+          <RootStack.Screen name="ResultDetail" component={ResultDetail} />
         </RootStack.Navigator>
       </NavigationContainer>
     );

@@ -1,25 +1,28 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {appColor} from '../../../constants/app.constant';
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import Header from '../../../components/header';
+import BackButton from '../../../components/back-button';
 import {sizeFont, sizeHeight, sizeWidth} from '../../../helpers/size.helper';
+import {appColor} from '../../../constants/app.constant';
 
-export default class ResultItem extends Component {
-  render() {
-    const {item} = this.props;
-    return (
-      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
+const ResultDetail = (props) => {
+  const goBack = () => {
+    props.navigation.goBack();
+  };
+  const {item} = props.route.params;
+  return (
+    <View style={styles.contain}>
+      <Header
+        title={`Học kỳ ${item.semester}`}
+        left={<BackButton onPress={goBack} />}
+      />
+      <View style={styles.container}>
         <View style={[styles.row, {justifyContent: 'space-between'}]}>
-          <Text style={styles.name}>Học kì/Năm học</Text>
-          <Text style={[styles.name, {color: appColor.primary}]}>
-            {item.semester}
-          </Text>
-        </View>
-        {/* <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <Text style={styles.title}>TC đăng ký </Text>
           <Text style={styles.content}> {item.registered_credit}</Text>
-          <Text style={[styles.title, {marginLeft: sizeWidth(40)}]}>
-            TC Học lại{' '}
-          </Text>
+        </View>
+        <View style={[styles.row, {justifyContent: 'space-between'}]}>
+          <Text style={[styles.title]}>TC Học lại </Text>
           <Text style={[styles.content, {color: 'red'}]}>
             {' '}
             {item.relearn_credit ? item.relearn_credit : 0}
@@ -27,27 +30,20 @@ export default class ResultItem extends Component {
         </View>
         <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <Text style={styles.title}>Điểm TBC T4 </Text>
-          <Text style={[styles.content, {marginRight: sizeWidth(40)}]}>
-            {item.avg_b4}
-          </Text>
+          <Text style={[styles.content]}>{item.avg_b4}</Text>
+        </View>
+        <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <Text style={styles.title}>Điểm TBC T104 </Text>
           <Text style={[styles.content]}>{item.avg_b10}</Text>
         </View>
         <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <Text style={styles.title}>Điểm TBC học bổng </Text>
-          <Text style={[styles.content, {marginRight: sizeWidth(20)}]}>
-            {item.avg_scholar}
-          </Text>
+          <Text style={[styles.content]}>{item.avg_scholar}</Text>
+        </View>
+        <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <Text style={styles.title}>Điểm rèn luyện </Text>
           <Text style={[styles.content]}>{item.moral_points}</Text>
         </View>
-        <View
-          style={{
-            height: sizeWidth(1),
-            backgroundColor: '#E7E7E7',
-            marginVertical: sizeHeight(10),
-          }}
-        />
         <View
           style={[styles.row, {marginTop: 0, justifyContent: 'space-between'}]}>
           <Text style={styles.title}>Số TC tích lũy </Text>
@@ -67,6 +63,14 @@ export default class ResultItem extends Component {
             {item.warnings != '' ? item.warnings : 'Không'}
           </Text>
         </View>
+        <View
+          style={{
+            height: sizeWidth(1),
+            backgroundColor: '#E7E7E7',
+            marginTop: sizeHeight(10),
+            marginBottom: sizeHeight(20),
+          }}
+        />
         <View
           style={{
             flexDirection: 'row',
@@ -99,27 +103,33 @@ export default class ResultItem extends Component {
             </Text>
           </View>
         ) : null}
-        <View style={styles.row}></View> */}
-      </TouchableOpacity>
-    );
-  }
-}
+      </View>
+    </View>
+  );
+};
+
+export default ResultDetail;
 
 const styles = StyleSheet.create({
+  contain: {
+    flex: 1,
+    alignItems: 'center',
+  },
   container: {
-    width: '100%',
+    marginTop: sizeHeight(20),
+    width: '90%',
     backgroundColor: 'white',
     marginBottom: sizeHeight(10),
     paddingHorizontal: sizeWidth(20),
-    paddingVertical: sizeHeight(10),
+    paddingVertical: sizeHeight(20),
     borderRadius: sizeWidth(10),
     elevation: 3,
   },
   name: {
+    color: appColor.primary,
     fontWeight: 'bold',
     fontSize: sizeFont(17),
     marginBottom: sizeHeight(2),
-    color: 'gray',
   },
   content: {
     color: appColor.primary,
@@ -138,7 +148,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: sizeHeight(3),
+    marginBottom: sizeHeight(15),
   },
   type: {
     paddingVertical: sizeHeight(2),
