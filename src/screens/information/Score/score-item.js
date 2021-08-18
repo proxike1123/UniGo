@@ -1,16 +1,16 @@
-import React, { Component } from 'react'
-import {View, Text, StyleSheet} from 'react-native';
-import { appColor } from '../../../constants/app.constant';
-import { sizeFont, sizeHeight, sizeWidth } from '../../../helpers/size.helper';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {appColor} from '../../../constants/app.constant';
+import {sizeFont, sizeHeight, sizeWidth} from '../../../helpers/size.helper';
 
 export default class ScoreItem extends Component {
-    render () {
-        const {item} = this.props;
-        return (
-            <View style = {styles.container}>
-                <Text style = {styles.name}>{item.course_name}</Text>
-                <Text style = {styles.type}>(Kỳ {item.semester})</Text>
-                <View style = {styles.row}>
+  render() {
+    const {item} = this.props;
+    return (
+      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
+        <Text style={styles.name}>{item.course_name}</Text>
+        <Text style={styles.type}>(Kỳ {item.semester})</Text>
+        {/* <View style = {styles.row}>
                     <Text style = {styles.title}>Mã học phần </Text>
                     <Text style = {styles.content}>{item.course_code}</Text>
                 </View>
@@ -58,85 +58,85 @@ export default class ScoreItem extends Component {
                             : styles.veryBad 
                         ]}>{item.as_text == "I" || item.as_text == "" ? "-" : item.as_text}</Text>
                     </View>
-                </View>
-            </View>
-        )
-    }
+                </View> */}
+      </TouchableOpacity>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        backgroundColor: 'white',
-        marginBottom: sizeHeight(10),
-        paddingHorizontal: sizeWidth(20),
-        paddingVertical: sizeHeight(10),
-        borderRadius: sizeWidth(10),
-        elevation: 3,
-    },
-    name: {
-        color: appColor.primary,
-        fontWeight: 'bold',
-        fontSize: sizeFont(17),
-        marginBottom: sizeHeight(2),
-    },
-    content: {
-        color: appColor.text,
-        fontSize: sizeFont(15),
-        textAlign: 'center',
-    },
-    date: {
-        color: "red",
-        fontSize: sizeFont(15),
-        textAlign: 'right',
-    },
-    title: {
-        fontWeight: 'bold',
-        fontSize: sizeFont(15),
-    },
-    row: {
-        flexDirection: 'row', 
-        alignItems: 'center',
-        marginTop: sizeHeight(3)
-    },
-    type: {
-        paddingVertical: sizeHeight(2),
-        fontSize: sizeFont(14),
-        color: 'green',
-        fontWeight: 'bold',
-    },
-    score: {
-        marginRight: sizeWidth(10), 
-        color: 'red',
-        width: sizeWidth(40)
-    },
-    rank: {
-        width: sizeWidth(65),
-        height: sizeWidth(65),
-        borderWidth: sizeHeight(1.5),
-        borderRadius:sizeHeight(50),
-        borderColor: 'red',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop :sizeHeight(3)
-    },
-    rankText: {
-        fontSize: sizeFont(35),
-        fontWeight: 'bold',
-    },
-    veryGood: {
-        color: "green",
-    },
-    good: {
-        color: "orange",
-    },
-    normal: {
-        color: appColor.primary,
-    },
-    bad: {
-        color: appColor.gray,
-    }, 
-    veryBad: {
-        color: "black"
-    }
-})
+  container: {
+    width: '100%',
+    backgroundColor: 'white',
+    marginBottom: sizeHeight(10),
+    paddingHorizontal: sizeWidth(20),
+    paddingVertical: sizeHeight(10),
+    borderRadius: sizeWidth(10),
+    elevation: 3,
+  },
+  name: {
+    color: appColor.primary,
+    fontWeight: 'bold',
+    fontSize: sizeFont(17),
+    marginBottom: sizeHeight(2),
+  },
+  content: {
+    color: appColor.text,
+    fontSize: sizeFont(15),
+    textAlign: 'center',
+  },
+  date: {
+    color: 'red',
+    fontSize: sizeFont(15),
+    textAlign: 'right',
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: sizeFont(15),
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: sizeHeight(3),
+  },
+  type: {
+    paddingVertical: sizeHeight(2),
+    fontSize: sizeFont(14),
+    color: 'green',
+    fontWeight: 'bold',
+  },
+  score: {
+    marginRight: sizeWidth(10),
+    color: 'red',
+    width: sizeWidth(40),
+  },
+  rank: {
+    width: sizeWidth(65),
+    height: sizeWidth(65),
+    borderWidth: sizeHeight(1.5),
+    borderRadius: sizeHeight(50),
+    borderColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: sizeHeight(3),
+  },
+  rankText: {
+    fontSize: sizeFont(35),
+    fontWeight: 'bold',
+  },
+  veryGood: {
+    color: 'green',
+  },
+  good: {
+    color: 'orange',
+  },
+  normal: {
+    color: appColor.primary,
+  },
+  bad: {
+    color: appColor.gray,
+  },
+  veryBad: {
+    color: 'black',
+  },
+});
