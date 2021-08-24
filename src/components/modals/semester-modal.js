@@ -19,13 +19,13 @@ export default class SemesterModal extends Component {
       <TouchableOpacity
         style={styles.itemContainer}
         key={index.toString()}
-        onPress={() => this.props.onSearch(item.semester)}>
+        onPress={() => this.props.onSearch(item)}>
         <View style={styles.itemRow}>
           <Image
             style={styles.itemImg}
             source={require('../../assets/images/book.png')}
           />
-          <Text style={styles.itemText}>{item.semester}</Text>
+          <Text style={styles.itemText}>{item.semester_name}</Text>
           <Image
             style={styles.itemArrow}
             source={require('../../assets/images/right.png')}
@@ -54,7 +54,7 @@ export default class SemesterModal extends Component {
                   </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.body}>
-                  {data.map((item, index) => {
+                  {this.props.list.map((item, index) => {
                     return this.renderItem(item, index);
                   })}
                 </ScrollView>
@@ -140,24 +140,3 @@ const styles = StyleSheet.create({
     tintColor: '#98A1BF',
   },
 });
-
-const data = [
-  {
-    semester: 'Học kì 2 năm học 2020-2021',
-  },
-  {
-    semester: 'Học kì 1 năm học 2020-2021',
-  },
-  {
-    semester: 'Học kì 2 năm học 2019-2020',
-  },
-  {
-    semester: 'Học kì 1 năm học 2019-2020',
-  },
-  {
-    semester: 'Học kì 2 năm học 2018-2019',
-  },
-  {
-    semester: 'Học kì 1 năm học 2018-2019',
-  },
-];

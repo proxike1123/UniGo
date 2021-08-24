@@ -82,7 +82,7 @@ export default class ScheduleItem extends Component {
         <ListSVModal
           visible={this.state.visible}
           onClosed={this.onClosed}
-          listSV={DS}
+          code={item.course_code}
         />
       </View>
     );

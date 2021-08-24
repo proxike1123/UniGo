@@ -24,7 +24,9 @@ export default class Schedule extends Component {
       visible: false,
       data: [],
       loading: false,
-      semester: 'Học kì 2 năm học 2020-2021',
+      semester: '',
+      listSemesters: [],
+      selectSemester: '',
     };
   }
   goBack = () => {
@@ -39,17 +41,40 @@ export default class Schedule extends Component {
     this.setState({visible: true});
   };
 
-  onSearch = (value) => {
+  onSearch = async (value) => {
     this.onClosed();
-    this.setState({semester: value});
+    await this.setState({
+      semester: value.semester_name,
+      selectSemester: value.semester_id,
+    });
+    this.getCourse();
   };
 
   componentDidMount = async () => {
+    this.getSemesters();
+  };
+
+  getSemesters = async () => {
+    this.setState({loading: true});
+    const params = {
+      command: 'semesters',
+    };
+    const res = await callApi(params);
+    await this.setState({
+      listSemesters: res,
+      selectSemester: res[res.length - 1].semester_id,
+      semester: res[res.length - 1].semester_name,
+    });
+    this.getCourse();
+  };
+
+  getCourse = async () => {
     this.setState({loading: true});
     const username = await getUsername();
     const params = {
       command: 'schedules',
       username: username,
+      search: `?semesterId=${this.state.selectSemester}`,
     };
     const res = await callApi(params);
     this.setState({data: res.length > 0 ? res : [], loading: false});
@@ -84,6 +109,7 @@ export default class Schedule extends Component {
           visible={this.state.visible}
           closed={this.onClosed}
           onSearch={this.onSearch}
+          list={this.state.listSemesters}
         />
       </View>
     );

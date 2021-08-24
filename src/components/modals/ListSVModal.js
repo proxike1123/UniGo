@@ -16,28 +16,52 @@ import {sizeFont, sizeHeight, sizeWidth} from '../../helpers/size.helper';
 import {appColor} from '../../constants/app.constant';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
+import callApi from '../../api/callAPI';
 
 export default class ListSVModal extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: [],
+    };
+  }
   onCall = (phone) => {
     Linking.openURL(
       Platform.OS === 'android' ? `tel:${phone}` : `telprompt:${phone}`,
     );
   };
+
+  componentDidMount = async () => {
+    !this.props.listSV ? this.getListSV() : null;
+  };
+
+  getListSV = async () => {
+    this.setState({loading: true});
+    const params = {
+      command: 'collaborator',
+      username: this.props.code,
+    };
+    const res = await callApi(params);
+    this.setState({list: res});
+  };
+
   renderItem = ({item, index}) => {
     return (
-      <View style={styles.item}>
+      <TouchableOpacity style={styles.item}>
         <View>
           <View style={styles.row}>
             <Text style={styles.itemTitle}>Tên SV</Text>
-            <Text style={styles.value}>{item.name}</Text>
+            <Text style={styles.value}>{item.student_name}</Text>
           </View>
-          <View style={styles.row}>
-            <Text style={styles.itemTitle}>Lớp</Text>
-            <Text style={styles.value}>{item.class}</Text>
-          </View>
+          {this.props.hideClass ? null : (
+            <View style={styles.row}>
+              <Text style={styles.itemTitle}>Lớp</Text>
+              <Text style={styles.value}>{item.class_name}</Text>
+            </View>
+          )}
           <View style={styles.row}>
             <Text style={styles.itemTitle}>MSSV</Text>
-            <Text style={styles.value}>{item.mssv}</Text>
+            <Text style={styles.value}>{item.sutdent_id}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.itemTitle}>SDT</Text>
@@ -52,7 +76,7 @@ export default class ListSVModal extends Component {
             <Icon name={'phone'} size={sizeWidth(20)} color={'white'} />
           </TouchableOpacity>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   render() {
@@ -76,7 +100,9 @@ export default class ListSVModal extends Component {
               <TouchableWithoutFeedback onPress={null}>
                 <View style={styles.body}>
                   <View style={styles.header}>
-                    <Text style={styles.title}>Danh sách lớp</Text>
+                    <Text style={styles.title}>
+                      {this.props.title ? this.props.title : 'Danh sách lớp'}
+                    </Text>
                     <TouchableOpacity
                       onPress={this.props.onClosed}
                       style={{
@@ -90,7 +116,7 @@ export default class ListSVModal extends Component {
                       />
                     </TouchableOpacity>
                   </View>
-                  <View style={styles.search}>
+                  {/* <View style={styles.search}>
                     <TextInput
                       style={styles.input}
                       placeholder="Tìm sinh viên"
@@ -102,11 +128,13 @@ export default class ListSVModal extends Component {
                       size={sizeWidth(20)}
                       color={appColor.blur}
                     />
-                  </View>
+                  </View> */}
                   <View style={styles.bottom}>
                     <FlatList
                       showsVerticalScrollIndicator={false}
-                      data={this.props.listSV}
+                      data={
+                        this.props.listSV ? this.props.listSV : this.state.list
+                      }
                       keyExtractor={(item, index) => index}
                       renderItem={this.renderItem}
                     />
