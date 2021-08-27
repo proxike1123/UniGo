@@ -81,11 +81,11 @@ export default class SummaryResult extends Component {
           )}
           <View style={{height: sizeHeight(30)}} />
         </ScrollView>
-        <SemesterModal
+        {/* <SemesterModal
           visible={this.state.visible}
           closed={this.onClosed}
           onSearch={this.onSearch}
-        />
+        /> */}
       </View>
     );
   }

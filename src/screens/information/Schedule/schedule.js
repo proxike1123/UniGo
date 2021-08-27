@@ -60,6 +60,7 @@ export default class Schedule extends Component {
       command: 'semesters',
     };
     const res = await callApi(params);
+
     await this.setState({
       listSemesters: res,
       selectSemester: res[res.length - 1].semester_id,
